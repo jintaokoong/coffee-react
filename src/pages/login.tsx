@@ -1,9 +1,16 @@
+import {
+  Button,
+  Card,
+  Elevation,
+  FormGroup,
+  InputGroup,
+} from '@blueprintjs/core';
 import { useFormik } from 'formik';
+import { decode } from 'jsonwebtoken';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { LOGIN, LOGIN_FAIL, LOGIN_SUCCESS } from '../constants/redux-types';
 import * as authService from '../services/auth-service';
-import { transformLoginResponse } from '../utils/auth-transformer';
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -19,52 +26,57 @@ export const LoginPage = () => {
         type: LOGIN,
       });
       authService
-        .login({
+        .newLogin({
           email: values.email,
           password: values.password,
         })
         .then((res) => {
-          const response = transformLoginResponse(res);
+          const { accessToken }: { accessToken: string } = res.data;
+          const payload: any = decode(accessToken);
           dispatch({
             type: LOGIN_SUCCESS,
-            payload: response,
+            payload: {
+              accessToken: accessToken,
+              email: payload['email'],
+            },
           });
         })
-        .catch((error: any) => {
-          console.error(error);
+        .catch((err) => {
           dispatch({
             type: LOGIN_FAIL,
-            error: error,
+            error: err,
           });
+          console.error(err);
         });
     },
   });
 
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
-        <div>
-          <label htmlFor={'email'}>email</label>
-          <input
-            id={'email'}
-            name={'email'}
-            type={'email'}
-            onChange={formik.handleChange}
-            value={formik.values.email}
-          />
-        </div>
-        <div>
-          <label htmlFor={'password'}>password</label>
-          <input
-            id={'password'}
-            name={'password'}
-            type={'password'}
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-        </div>
-        <button type={'submit'}>login</button>
-      </form>
+    <div className={'login-container'}>
+      <Card elevation={Elevation.TWO}>
+        <form onSubmit={formik.handleSubmit}>
+          <FormGroup label="Email" labelFor="email">
+            <InputGroup
+              id="email"
+              type={'email'}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+            />
+          </FormGroup>
+          <FormGroup label="Password" labelFor="password">
+            <InputGroup
+              id="password"
+              type={'password'}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+            />
+          </FormGroup>
+          <Button fill type={'submit'}>
+            Login
+          </Button>
+          {/* <button type={'submit'}>login</button> */}
+        </form>
+      </Card>
     </div>
   );
 };

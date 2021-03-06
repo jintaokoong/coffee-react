@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
 import { Provider as ReduxProvider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import App from './app';
+import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import store from './store';
-import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <ReduxProvider store={store}>
       <BrowserRouter>
-        <App />
+        <div className={'bp3-dark'}>
+          <App />
+        </div>
       </BrowserRouter>
     </ReduxProvider>
   </React.StrictMode>,

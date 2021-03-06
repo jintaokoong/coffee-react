@@ -20,6 +20,7 @@ const INITIAL_STATUS_STATE: AuthStatusState = {
 
 const INITIAL_STATE: AuthState = {
   accessToken: '',
+  email: '',
   status: INITIAL_STATUS_STATE,
 };
 
@@ -37,6 +38,7 @@ const AuthReducer = (state = INITIAL_STATE, action: AuthActionTypes) => {
       return {
         ...state,
         accessToken: action.payload.accessToken,
+        email: action.payload.email,
         status: {
           ...state.status,
           login: 'SUCCESS',
