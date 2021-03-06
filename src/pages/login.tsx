@@ -10,7 +10,7 @@ import { decode } from 'jsonwebtoken';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { LOGIN, LOGIN_FAIL, LOGIN_SUCCESS } from '../constants/redux-types';
-import * as authService from '../services/auth-service';
+import authService from '../services/auth-service';
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export const LoginPage = () => {
         type: LOGIN,
       });
       authService
-        .newLogin({
+        .login({
           email: values.email,
           password: values.password,
         })

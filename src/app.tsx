@@ -21,7 +21,7 @@ import { DashboardPage } from './pages/dashboard';
 import { HomePage } from './pages/home';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
-import * as authService from './services/auth-service';
+import authService from './services/auth-service';
 
 function App() {
   const dispatch = useDispatch();
@@ -33,8 +33,8 @@ function App() {
   useEffect(() => {
     authService
       .refreshToken()
-      .then((res) => {
-        const { accessToken }: { accessToken: string } = res.data;
+      .then((data) => {
+        const { accessToken } = data;
         const payload: any = decode(accessToken);
         dispatch({
           type: LOGIN_SUCCESS,

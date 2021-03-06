@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { LOGOUT } from '../constants/redux-types';
-import * as authService from '../services/auth-service';
+import authService from '../services/auth-service';
 
 export const DashboardPage = () => {
   const dispatch = useDispatch();
