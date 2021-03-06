@@ -7,13 +7,17 @@ import {
 } from '@blueprintjs/core';
 import { useFormik } from 'formik';
 import { decode } from 'jsonwebtoken';
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { LOGIN, LOGIN_FAIL, LOGIN_SUCCESS } from '../constants/redux-types';
+import React, { useContext } from 'react';
 import authService from '../services/auth-service';
+import {
+  AuthContext,
+  LOGIN,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
+} from '../state/context/auth-context';
 
 export const LoginPage = () => {
-  const dispatch = useDispatch();
+  const [, dispatch] = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {

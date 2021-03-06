@@ -11,32 +11,32 @@ import {
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { decode } from 'jsonwebtoken';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { PrivateRoute } from './components/routes/private-route';
 import { SkipAuthRoute } from './components/routes/skip-auth-route';
-import { LOGIN_SUCCESS } from './constants/redux-types';
 import { DashboardPage } from './pages/dashboard';
 import { HomePage } from './pages/home';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import authService from './services/auth-service';
+import { AuthContext, LOGIN_SUCCESS } from './state/context/auth-context';
 
 function App() {
-  const dispatch = useDispatch();
+  const [authState, authDispatch] = useContext(AuthContext);
   const history = useHistory();
-  const loginStatus = useSelector((state: any) => state.auth.status.login);
-  const accessToken = useSelector((state: any) => state.auth.accessToken);
-  const email = useSelector((state: any) => state.auth.email);
-  const authed = accessToken && accessToken.length > 0;
+  const loginStatus = authState.status.login;
+  const accessToken = authState.accessToken;
+  const email = authState.email;
+  const authed = accessToken !== undefined && accessToken.length > 0;
+
   useEffect(() => {
     authService
       .refreshToken()
       .then((data) => {
         const { accessToken } = data;
         const payload: any = decode(accessToken);
-        dispatch({
+        authDispatch({
           type: LOGIN_SUCCESS,
           payload: {
             accessToken: accessToken,
@@ -48,7 +48,7 @@ function App() {
         console.error('refresh token failed.');
         console.error(error);
       });
-  }, [dispatch]);
+  }, [authDispatch]);
 
   useEffect(() => {
     if (history && loginStatus === 'SUCCESS') {
