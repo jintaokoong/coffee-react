@@ -5,10 +5,11 @@
 @import '~@blueprintjs/popover2/lib/css/blueprint-popover2.css';
 @import '../src/pages/styles/login.scss';
 
-#root > .bp3-dark {
+.bp3-dark > .content {
   background-color: $pt-dark-app-background-color;
 }
 
 .content {
   min-height: calc(100vh - #{$pt-navbar-height});
+  overflow: auto;
 }
