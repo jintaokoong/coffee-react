@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import authService from '../services/auth-service';
 import { AuthContext, LOGOUT } from '../state/context/auth-context';
