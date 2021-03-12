@@ -5,12 +5,13 @@ import App from './app';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './state/context/auth-context';
+import { Classes } from '@blueprintjs/core';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
       <BrowserRouter>
-        <div className={'bp3-dark'}>
+        <div className={Classes.DARK}>
           <App />
         </div>
       </BrowserRouter>

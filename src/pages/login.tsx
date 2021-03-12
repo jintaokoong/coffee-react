@@ -78,7 +78,6 @@ export const LoginPage = () => {
           <Button fill type={'submit'}>
             Login
           </Button>
-          {/* <button type={'submit'}>login</button> */}
         </form>
       </Card>
     </div>
