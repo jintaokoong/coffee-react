@@ -1,18 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
-import { Provider as ReduxProvider } from 'react-redux';
-import reportWebVitals from './reportWebVitals';
-import store from './store';
 import { BrowserRouter } from 'react-router-dom';
+import App from './app';
+import './index.scss';
+import reportWebVitals from './reportWebVitals';
+import { AuthContextProvider } from './state/context/auth-context';
+import { Classes } from '@blueprintjs/core';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ReduxProvider store={store}>
+    <AuthContextProvider>
       <BrowserRouter>
-        <App />
+        <div className={Classes.DARK}>
+          <App />
+        </div>
       </BrowserRouter>
-    </ReduxProvider>
+    </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

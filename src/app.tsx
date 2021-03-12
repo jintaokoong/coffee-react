@@ -1,29 +1,34 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
-import { LOGIN_SUCCESS } from './constants/redux-types';
+import { decode } from 'jsonwebtoken';
+import React, { useContext, useEffect } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import { PrivateRoute } from './components/routes/private-route';
+import { SkipAuthRoute } from './components/routes/skip-auth-route';
 import { DashboardPage } from './pages/dashboard';
 import { HomePage } from './pages/home';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
-import * as authService from './services/auth-service';
-import { PrivateRoute } from './components/routes/private-route';
-import { SkipAuthRoute } from './components/routes/skip-auth-route';
+import authService from './services/auth-service';
+import { AuthContext, LOGIN_SUCCESS } from './state/context/auth-context';
+import { Navigation } from './components/headers/navigation';
 
 function App() {
-  const dispatch = useDispatch();
+  const [authState, authDispatch] = useContext(AuthContext);
   const history = useHistory();
-  const loginStatus = useSelector((state: any) => state.auth.status.login);
-  const accessToken = useSelector((state: any) => state.auth.accessToken);
-  const authed = accessToken && accessToken.length > 0;
+  const loginStatus = authState.status.login;
+  const accessToken = authState.accessToken;
+  const authed = accessToken !== undefined && accessToken.length > 0;
+
   useEffect(() => {
     authService
       .refreshToken()
-      .then((res) => {
-        dispatch({
+      .then((data) => {
+        const { accessToken } = data;
+        const payload: any = decode(accessToken);
+        authDispatch({
           type: LOGIN_SUCCESS,
           payload: {
-            accessToken: res.data.accessToken,
+            accessToken: accessToken,
+            email: payload['email'],
           },
         });
       })
@@ -31,7 +36,7 @@ function App() {
         console.error('refresh token failed.');
         console.error(error);
       });
-  }, [dispatch]);
+  }, [authDispatch]);
 
   useEffect(() => {
     if (history && loginStatus === 'SUCCESS') {
@@ -42,28 +47,23 @@ function App() {
 
   return (
     <React.Fragment>
-      <div>
-        <Link to={'/'}>Home</Link>
+      <Navigation />
+      <div className={'content'}>
+        <Switch>
+          <Route exact path={'/'} component={HomePage} />
+          <SkipAuthRoute
+            authed={authed}
+            path={'/login'}
+            component={LoginPage}
+          />
+          <Route path={'/register'} component={RegisterPage} />
+          <PrivateRoute
+            authed={authed}
+            path={'/dashboard'}
+            component={DashboardPage}
+          />
+        </Switch>
       </div>
-      <div>
-        <Link to={'/login'}>Login</Link>
-      </div>
-      <div>
-        <Link to={'/register'}>Register</Link>
-      </div>
-      <div>
-        <Link to={'/dashboard'}>Dashboard</Link>
-      </div>
-      <Switch>
-        <Route exact path={'/'} component={HomePage} />
-        <SkipAuthRoute authed={authed} path={'/login'} component={LoginPage} />
-        <Route path={'/register'} component={RegisterPage} />
-        <PrivateRoute
-          authed={authed}
-          path={'/dashboard'}
-          component={DashboardPage}
-        />
-      </Switch>
     </React.Fragment>
   );
 }
