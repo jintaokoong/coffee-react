@@ -1,6 +1,9 @@
+import { Toolbar } from '@material-ui/core';
 import { decode } from 'jsonwebtoken';
 import React, { useContext, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
+import { AppDrawer } from './components/app/drawer';
+import { Navigation } from './components/headers/navigation';
 import { PrivateRoute } from './components/routes/private-route';
 import { SkipAuthRoute } from './components/routes/skip-auth-route';
 import { DashboardPage } from './pages/dashboard';
@@ -9,8 +12,7 @@ import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import authService from './services/auth-service';
 import { AuthContext, LOGIN_SUCCESS } from './state/context/auth-context';
-import { Navigation } from './components/headers/navigation';
-import { Toolbar } from '@material-ui/core';
+
 
 function App() {
   const [authState, authDispatch] = useContext(AuthContext);
@@ -50,6 +52,7 @@ function App() {
     <React.Fragment>
       <Navigation />
       <Toolbar />
+      <AppDrawer />
       <div className={'content'}>
         <Switch>
           <Route exact path={'/'} component={HomePage} />

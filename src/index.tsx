@@ -7,6 +7,7 @@ import App from './app';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './state/context/auth-context';
+import { UIContextProvider } from './state/context/ui-context';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -19,13 +20,15 @@ const darkTheme = createMuiTheme({
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <ThemeProvider theme={darkTheme} >
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-      </ThemeProvider>
-    </AuthContextProvider>
+    <UIContextProvider>
+      <AuthContextProvider>
+        <ThemeProvider theme={darkTheme}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
+      </AuthContextProvider>
+    </UIContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

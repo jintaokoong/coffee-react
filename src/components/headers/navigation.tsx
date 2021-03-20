@@ -8,6 +8,8 @@ import { AppBar, Button, IconButton, ListItemIcon, ListItemText, makeStyles, Men
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ExitToApp from '@material-ui/icons/ExitToApp';
+import { CLOSE_DRAWER, OPEN_DRAWER, UIContext } from '../../state/context/ui-context';
+import { AnyObject } from 'yup/lib/object';
 
 const useRouting = (): [H.History<unknown>, (route: string) => (e: any) => void] => {
   const history = useHistory();
@@ -108,13 +110,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Toggler: React.FC = () => {
+  const [authState,] = useContext(AuthContext);
+  const [uiState, uiDispatch] = useContext(UIContext);
+  const { accessToken } = authState;
+  const isLoggedIn = accessToken.length > 0;
+  
+  const classes = useStyles();
+
+  const toggleMenu = useCallback((_e: any) => {
+    if (uiState.drawerIsOpen) {
+      uiDispatch({ type: CLOSE_DRAWER });
+      return;
+    }
+
+    uiDispatch({ type: OPEN_DRAWER });
+  }, []);
+  
+  return isLoggedIn ? <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleMenu}>
+    <MenuIcon />
+  </IconButton> : null;
+}
+
 export const Navigation = () => {
   const classes = useStyles();
+
   return <AppBar position={'fixed'}>
     <Toolbar>
-      <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-        <MenuIcon />
-      </IconButton>
+      <Toggler/>
       <Typography variant="h6" className={classes.title}>
         Coffee
       </Typography>
