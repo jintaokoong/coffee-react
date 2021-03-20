@@ -1,11 +1,11 @@
-import { Button, Card, Elevation, FormGroup, InputGroup } from '@blueprintjs/core';
+import { Card, CardContent, FormControl, makeStyles, Paper, TextField } from '@material-ui/core';
 import { FormikHelpers, useFormik } from 'formik';
 import { decode } from 'jsonwebtoken';
 import React, { useContext } from 'react';
+import * as yup from 'yup';
+import { SubmitButton } from '../components/extension/button';
 import authService from '../services/auth-service';
 import { AuthContext, LOGIN, LOGIN_FAIL, LOGIN_SUCCESS } from '../state/context/auth-context';
-import * as yup from 'yup';
-import { getIntentFromError } from '../utils/form/errors';
 
 interface Fields {
   email: string;
@@ -49,9 +49,39 @@ const onSubmit = (dispatch: React.Dispatch<any>) => (values: Fields, helpers: Fo
     });
 };
 
+const useStyles = makeStyles((themes) => ({
+  container: {
+    minHeight: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  card: {
+    [themes.breakpoints.down('sm')]: {
+      margin: '0 20px',
+    },
+    [themes.breakpoints.up('md')]: {
+      margin: '0 20px',
+    },
+    [themes.breakpoints.up('lg')]: {
+      minWidth: '450px',
+    }
+  },
+  margin: {
+    margin: '8px 0',
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}))
+
 export const LoginPage = () => {
   const [, dispatch] = useContext(AuthContext);
-
+  const classes = useStyles();
   const formik = useFormik<Fields>({
     initialValues: {
       email: '',
@@ -62,38 +92,20 @@ export const LoginPage = () => {
   });
 
   return (
-    <div className={'login-container'}>
-      <Card elevation={Elevation.TWO}>
-        <form onSubmit={formik.handleSubmit}>
-          <FormGroup label="Email"
-                     labelFor="email"
-                     helperText={formik.errors.email}
-                     intent={getIntentFromError(formik.errors.email)}>
-            <InputGroup
-              id="email"
-              type={'email'}
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              intent={getIntentFromError(formik.errors.email)}
-            />
-          </FormGroup>
-          <FormGroup label="Password"
-                     labelFor="password"
-                     helperText={formik.errors.password}
-                     intent={getIntentFromError(formik.errors.password)}>
-            <InputGroup
-              id="password"
-              type={'password'}
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              intent={getIntentFromError(formik.errors.password)}
-            />
-          </FormGroup>
-          <Button fill type={'submit'} loading={formik.isSubmitting} disabled={formik.isSubmitting || !formik.isValid}>
-            Login
-          </Button>
-        </form>
+    <Paper className={classes.container}>
+      <Card elevation={2} className={classes.card}>
+        <CardContent>
+          <form onSubmit={formik.handleSubmit}>
+            <FormControl className={classes.margin} fullWidth>
+              <TextField id={'email'} label={'Email'} onChange={formik.handleChange} />
+            </FormControl>
+            <FormControl className={classes.margin} fullWidth >
+              <TextField id={'password'} label={'Password'} type={'password'} onChange={formik.handleChange} />
+            </FormControl>
+            <SubmitButton className={classes.margin} size={'medium'} disabled={formik.isSubmitting} variant={'contained'} color='primary' fullWidth content={'Login'} loading={formik.isSubmitting}/>
+          </form>
+        </CardContent>
       </Card>
-    </div>
+    </Paper>
   );
 };

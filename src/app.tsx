@@ -10,6 +10,7 @@ import { RegisterPage } from './pages/register';
 import authService from './services/auth-service';
 import { AuthContext, LOGIN_SUCCESS } from './state/context/auth-context';
 import { Navigation } from './components/headers/navigation';
+import { Toolbar } from '@material-ui/core';
 
 function App() {
   const [authState, authDispatch] = useContext(AuthContext);
@@ -48,6 +49,7 @@ function App() {
   return (
     <React.Fragment>
       <Navigation />
+      <Toolbar />
       <div className={'content'}>
         <Switch>
           <Route exact path={'/'} component={HomePage} />

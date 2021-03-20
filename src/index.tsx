@@ -1,3 +1,5 @@
+import { blue } from '@material-ui/core/colors';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -5,16 +7,24 @@ import App from './app';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './state/context/auth-context';
-import { Classes } from '@blueprintjs/core';
+
+const darkTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: blue[500],
+    },
+    type: 'light',
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
+      <ThemeProvider theme={darkTheme} >
       <BrowserRouter>
-        <div className={Classes.DARK}>
-          <App />
-        </div>
+        <App />
       </BrowserRouter>
+      </ThemeProvider>
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('root')

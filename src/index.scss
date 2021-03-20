@@ -1,15 +1,10 @@
-@import '~@blueprintjs/core/lib/scss/variables.scss';
-@import '~normalize.css';
-@import '~@blueprintjs/core/lib/css/blueprint.css';
-@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
-@import '~@blueprintjs/popover2/lib/css/blueprint-popover2.css';
 @import '../src/pages/styles/login.scss';
 
-.bp3-dark > .content {
-  background-color: $pt-dark-app-background-color;
+body {
+  margin: 0px;
 }
 
 .content {
-  min-height: calc(100vh - #{$pt-navbar-height});
+  min-height: calc(100vh - 64px);
   overflow: auto;
 }
